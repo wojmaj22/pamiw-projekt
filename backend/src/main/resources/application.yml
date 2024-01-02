@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: public
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: backend
+            client-secret: m5GkvEzg9XIVjjyPig2z6HWgDuoKLeEN
+            scope:
+              - openid
+        provider:
+          keycloak:
+            issuer-uri: http://40.114.251.183:8080/realms/backend
+      resource-server:
+        jwt:
+          issuer-uri: http://40.114.251.183:8080/realms/backend
+
+server:
+  port: 8080
