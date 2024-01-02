@@ -5,10 +5,10 @@ import keycloak from "./Keycloak";
 import PrivateRoute from "./helpers/PrivateRoute";
 import Nav from "./components/Nav";
 import Home from "./pages/Home";
-import Form from "./components/Form";
-import Secured from "./pages/Secured";
+import Form from "./pages/Form";
 import "./styles/index.css";
 import Footer from "./components/Footer";
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -19,10 +19,10 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/form/:productId?" element={<Form />} />
           <Route
-            path="/secured"
+            path="/order"
             element={
               <PrivateRoute>
-                <Secured />
+                <Cart />
               </PrivateRoute>
             }
           />

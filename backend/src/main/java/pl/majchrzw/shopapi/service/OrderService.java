@@ -197,5 +197,34 @@ public class OrderService {
 			throw new EntityNotFoundException("No product with id: " + id + ", has been found.");
 		}
 	}
+	
+	public Order getOrderByUsername(String username){
+		List<Order> orders =  orderRepository.findAllByUserAndOrderStatus(username, OrderStatus.NEW);
+		if( orders.size() > 1){
+			throw new IllegalStateException("More than one new order for user: " + username);
+		}
+		if( orders.size() == 0){
+			return null;
+		}
+		return orders.get(0);
+	}
+	
+	public Order saveOrderByUsername(String username, AddToCartDTO dto){
+		// TODO - sprawdzić czy order istnieje, jak nie to saveNewOrder(stworzyć PostOrderRequestBody), jak istnieje to addProductToOrder
+		Order order = getOrderByUsername(username);
+		if ( order  == null){
+			PostOrderRequestBody body = new PostOrderRequestBody();
+			body.setUser(username);
+			body.setOrderStatus(OrderStatus.NEW);
+			body.setOrderDate(Date.from(Instant.now()));
+			body.setItems(dto.getItems());
+			return saveNewOrder(body);
+		} else {
+			for ( AddToCartRequestDTO x: dto.getItems()){
+				addProductToOrder(order, x.getId(), x.getQuantity());
+			}
+			return orderRepository.save(order);
+		}
+	}
 }
 

@@ -24,9 +24,11 @@ const Nav = () => {
         <a className="btn btn-ghost" href="/">
           {t("Navbar.products")}
         </a>
-        <a className="btn btn-ghost" href="/order">
-          {t("Navbar.cart")}
-        </a>
+        {keycloak.authenticated && (
+          <a className="btn btn-ghost" href="/order">
+            {t("Navbar.cart")}
+          </a>
+        )}
         {keycloak.hasRealmRole("admin") && (
           <a className="btn btn-ghost" href="/form">
             {t("Navbar.add")}

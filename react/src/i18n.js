@@ -20,6 +20,7 @@ i18n
             edit: "Edit",
             delete: "Delete product",
             loading: "Loading ...",
+            add: "Add to cart",
           },
           Navbar: {
             shop: "Shop",
@@ -42,6 +43,12 @@ i18n
             priceError: "Wrong price!",
             submitButton: "Save product",
           },
+          Cart: {
+            name: "Product name",
+            amount: "Amount in cart",
+            price: "Total price",
+            delete: "Delete",
+          },
         },
       },
       pl: {
@@ -52,6 +59,7 @@ i18n
             edit: "Edytuj",
             delete: "Usuń produkt",
             loading: "Ładowanie ...",
+            add: "Dodaj do koszyka",
           },
           Navbar: {
             shop: "Sklep",
@@ -73,6 +81,12 @@ i18n
             amountError: "Błędna ilość!",
             priceError: "Zła cena!",
             submitButton: "Zapisz produkt",
+          },
+          Cart: {
+            name: "Nazwa produktu",
+            amount: "Ilość w koszyku",
+            price: "Sumaryczna cena",
+            delete: "Usuń",
           },
         },
       },

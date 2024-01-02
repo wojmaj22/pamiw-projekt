@@ -1,9 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { useKeycloak } from "@react-keycloak/web";
 
 const Card = ({ products, loading }) => {
   const { t } = useTranslation();
+  const { keycloak, initialized } = useKeycloak();
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -27,6 +30,29 @@ const Card = ({ products, loading }) => {
     window.location.reload();
   };
 
+  const handleAdd = (id) => {
+    const dataToSend = {
+      items: [
+        {
+          id: id,
+          quantity: 1,
+        },
+      ],
+    };
+    fetch(
+      `http://localhost:8080/api/orders/${keycloak.idTokenParsed.preferred_username}`,
+      {
+        cache: "no-store",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
+      }
+    );
+    window.location.reload();
+  };
+
   return (
     <div className="bg-gray-100 p-8">
       <ul className="responsive-list flex flex-wrap justify-center gap-4">
@@ -40,15 +66,30 @@ const Card = ({ products, loading }) => {
               <p className="text-gray-700 text-base">
                 {t("Card.amount")} {product.stockQuantity}
               </p>
-              <Link to={"/form/" + product.id} className="btn btn-primary">
-                {t("Card.edit")}
-              </Link>
-              <button
-                className="btn btn-danger"
-                onClick={() => handleDelete(product.id)}
-              >
-                {t("Card.delete")}
-              </button>
+              {keycloak.authenticated && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleAdd(product.id)}
+                >
+                  {t("Card.add")}
+                </button>
+              )}
+              {keycloak.hasRealmRole("admin") && (
+                <div className="flex flex-row justify-between space-x-2 ">
+                  <Link
+                    to={"/form/" + product.id}
+                    className="btn btn-accent flex-1"
+                  >
+                    {t("Card.edit")}
+                  </Link>
+                  <button
+                    className="btn btn-danger flex-1"
+                    onClick={() => handleDelete(product.id)}
+                  >
+                    {t("Card.delete")}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}

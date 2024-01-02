@@ -37,9 +37,14 @@ public class OrderController {
 		return orderService.getOrders(PageRequest.of(page.orElse(0), size.orElse(20), Sort.by(Sort.Direction.DESC,_sort[0])));
 	}
 	
-	@GetMapping("/{id}")
-	public Order getOrderById(@PathVariable Long id){
-		return orderService.getOrderById(id);
+	@GetMapping("/{user}")
+	public Order getOrderByUsername(@PathVariable String user){
+		return orderService.getOrderByUsername(user);
+	}
+	
+	@PostMapping("/{user}")
+	public Order postOrderByUsername(@PathVariable String user, @RequestBody AddToCartDTO requestBody){
+		return orderService.saveOrderByUsername(user, requestBody);
 	}
 	
 	@GetMapping("/{id}/orderdetails")
