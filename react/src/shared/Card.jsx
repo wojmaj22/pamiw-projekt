@@ -20,7 +20,7 @@ const Card = ({ products, loading }) => {
 
   const handleDelete = async (id) => {
     try {
-      await fetch("http://localhost:8080/api/products/" + id, {
+      await fetch("http://20.101.96.88:80/api/products/" + id, {
         method: "DELETE",
         headers: {},
       });
@@ -40,7 +40,7 @@ const Card = ({ products, loading }) => {
       ],
     };
     fetch(
-      `http://localhost:8080/api/orders/${keycloak.idTokenParsed.preferred_username}`,
+      `http://20.101.96.88:80/api/orders/${keycloak.idTokenParsed.preferred_username}`,
       {
         cache: "no-store",
         method: "POST",

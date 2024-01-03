@@ -19,7 +19,7 @@ const Home = () => {
       setLoading(false); // Zmiana stanu po zakończeniu opóźnienia
     };
     const fetchPosts = () => {
-      fetch("http://localhost:8080/api/products?size=100&page=0", {
+      fetch("http://20.101.96.88:80/api/products?size=100&page=0", {
         cache: "no-store",
       })
         .then((res) => {

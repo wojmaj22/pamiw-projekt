@@ -18,7 +18,7 @@ const Form = ({}) => {
   useEffect(() => {
     setId(productId);
     const init = () => {
-      fetch("http://localhost:8080/api/products/" + productId, {
+      fetch("http://20.101.96.88:80/api/products/" + productId, {
         cache: "no-store",
       })
         .then((res) => res.json())

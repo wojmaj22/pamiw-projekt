@@ -9,6 +9,7 @@ import Form from "./pages/Form";
 import "./styles/index.css";
 import Footer from "./components/Footer";
 import Cart from "./pages/Cart";
+import AdminRoute from "./helpers/AdminRoute";
 
 function App() {
   return (
@@ -17,7 +18,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route path="/form/:productId?" element={<Form />} />
+          <Route
+            path="/form/:productId?"
+            element={
+              <AdminRoute>
+                <Form />
+              </AdminRoute>
+            }
+          />
           <Route
             path="/order"
             element={

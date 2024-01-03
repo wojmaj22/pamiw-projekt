@@ -11,7 +11,7 @@ function Cart() {
   useEffect(() => {
     const fetchCart = () => {
       fetch(
-        `http://localhost:8080/api/orders/${keycloak.idTokenParsed.preferred_username}`,
+        `http://20.101.96.88:80/api/orders/${keycloak.idTokenParsed.preferred_username}`,
         {
           cache: "no-store",
         }
@@ -34,7 +34,7 @@ function Cart() {
       ],
     };
     fetch(
-      `http://localhost:8080/api/orders/${keycloak.idTokenParsed.preferred_username}`,
+      `http://20.101.96.88:80/api/orders/${keycloak.idTokenParsed.preferred_username}`,
       {
         cache: "no-store",
         method: "POST",

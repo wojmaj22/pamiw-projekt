@@ -78,7 +78,9 @@ const Nav = () => {
               <button
                 type="button"
                 className="btn btn-ghost"
-                onClick={() => keycloak.login()}
+                onClick={() => {
+                  keycloak.login({ locale: i18n.language });
+                }}
               >
                 {t("Navbar.login")}
               </button>
