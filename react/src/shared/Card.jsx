@@ -2,8 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
+import { serverURL } from "../helpers/ApiProvider";
 
-const Card = ({ products, loading }) => {
+const Card = ({ products, loading, onDelete }) => {
   const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
 
@@ -18,19 +19,7 @@ const Card = ({ products, loading }) => {
     );
   }
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch("http://20.101.96.88:80/api/products/" + id, {
-        method: "DELETE",
-        headers: {},
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    window.location.reload();
-  };
-
-  const handleAdd = (id) => {
+  const handleAdd = async (id) => {
     const dataToSend = {
       items: [
         {
@@ -39,25 +28,24 @@ const Card = ({ products, loading }) => {
         },
       ],
     };
-    fetch(
-      `http://20.101.96.88:80/api/orders/${keycloak.idTokenParsed.preferred_username}`,
+    await fetch(
+      `${serverURL}/orders/${keycloak.idTokenParsed.preferred_username}`,
       {
-        cache: "no-store",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${keycloak.token}`,
         },
         body: JSON.stringify(dataToSend),
       }
     );
-    window.location.reload();
   };
 
   return (
-    <div className="bg-gray-100 p-8">
+    <div className="p-4 ">
       <ul className="responsive-list flex flex-wrap justify-center gap-4">
         {products.map((product) => (
-          <div key={product.id} className="card w-96 bg-base-100 shadow-xl m-4">
+          <div key={product.id} className="card w-96 bg-base-400 shadow-xl m-2">
             <div className="card-body">
               <h2 className="card-title">{product.name}</h2>
               <p className="text-gray-700 text-base">
@@ -84,7 +72,7 @@ const Card = ({ products, loading }) => {
                   </Link>
                   <button
                     className="btn btn-danger flex-1"
-                    onClick={() => handleDelete(product.id)}
+                    onClick={() => onDelete(product.id)}
                   >
                     {t("Card.delete")}
                   </button>

@@ -26,6 +26,10 @@ Po tym aplikacja będzie dostępna pod adresem `http://localhost:5173/`
 API backendowe jest dostępne pod adresem `http://20.101.96.88/api` i odpowiednimi endpointami
 Aplikacja implementuje standardy OAuth2.0 oraz OIDC poprzez instancję serwera keycloak - serwer autoryzacyjny jest dostęny pod adresem `http://40.114.251.183/realms/backend` i korzysta z domyślnych endpointów dla danych standardów.
 
+## Uruchomienie
+
+Uruchomienie części frotendowej jest opisane w rozdziale wyżej.
+
 ## Niezrealizowane funkcjonalności
 
 W ramach projektu nie powstała aplikacja mobilna jak i wszelkie podpunkty związane z aplikacją mobilną

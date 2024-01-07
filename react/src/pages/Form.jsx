@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useKeycloak } from "@react-keycloak/web";
+import { serverURL } from "../helpers/ApiProvider";
 
 const Form = ({}) => {
   let navigate = useNavigate();
+  let { keycloak, initialized } = useKeycloak();
   let { productId } = useParams();
   const [id, setId] = useState();
   const [name, setName] = useState();
@@ -18,7 +21,7 @@ const Form = ({}) => {
   useEffect(() => {
     setId(productId);
     const init = () => {
-      fetch("http://20.101.96.88:80/api/products/" + productId, {
+      fetch(`${serverURL}/products/${productId}`, {
         cache: "no-store",
       })
         .then((res) => res.json())
@@ -75,87 +78,93 @@ const Form = ({}) => {
   };
 
   const save = (event) => {
+    const body = JSON.stringify({
+      id: id,
+      name: name,
+      stockQuantity: amount,
+      price: price,
+    });
     event.preventDefault();
-    fetch("http://localhost:8080/api/products", {
+    fetch(`${serverURL}/products`, {
       method: "POST",
       headers: {
         "Content-type": "application/json",
+        Authorization: `Bearer ${keycloak.token}`,
       },
-      body: JSON.stringify({
-        id: id,
-        name: name,
-        stockQuantity: amount,
-        price: price,
-      }),
+      body: body,
     });
     navigate("/");
   };
 
   return (
     <div className="flex items-center justify-center h-screen">
-      <form onSubmit={save} className="w-full max-w-xs">
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">{t("Form.productName")}</span>
-            {nameValid === false && (
-              <span className="label-text-alt text-error">
-                {t("Form.nameError")}
-              </span>
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder={t("Form.name")}
-            className="input input-bordered w-full max-w-xs"
-            name="name"
-            value={name}
-            onChange={(e) => onNameChange(e.target.value)}
-          />
-        </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">{t("Form.productAmount")}</span>
-            {amountValid === false && (
-              <span className="label-text-alt text-error">
-                {t("Form.amountError")}
-              </span>
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder={t("Form.amount")}
-            name="amount"
-            className="input input-bordered w-full max-w-xs"
-            value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
-          />
-        </label>
-        <label className="form-control w-full max-w-xs">
-          <div className="label">
-            <span className="label-text">{t("Form.productPrice")}</span>
-            {priceValid === false && (
-              <span className="label-text-alt text-error">
-                {t("Form.priceError")}
-              </span>
-            )}
-          </div>
-          <input
-            type="text"
-            placeholder={t("Form.price")}
-            name="price"
-            className="input input-bordered w-full max-w-xs"
-            value={price}
-            onChange={(e) => onPriceChange(e.target.value)}
-          />
-        </label>
-        <button
-          className="btn btn-primary w-full mt-6"
-          type="submit"
-          disabled={!priceValid || !amountValid || !nameValid}
-        >
-          {t("Form.submitButton")}
-        </button>
-      </form>
+      <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card-body items-center">
+          <form onSubmit={save} className="w-full max-w-xs">
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <p className="label-text">{t("Form.productName")}</p>
+                {nameValid === false && (
+                  <span className="label-text-alt text-error">
+                    {t("Form.nameError")}
+                  </span>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder={t("Form.name")}
+                className="input input-bordered w-full max-w-xs"
+                name="name"
+                value={name}
+                onChange={(e) => onNameChange(e.target.value)}
+              />
+            </label>
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <p className="label-text">{t("Form.productAmount")}</p>
+                {amountValid === false && (
+                  <span className="label-text-alt text-error">
+                    {t("Form.amountError")}
+                  </span>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder={t("Form.amount")}
+                name="amount"
+                className="input input-bordered w-full max-w-xs"
+                value={amount}
+                onChange={(e) => onAmountChange(e.target.value)}
+              />
+            </label>
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <p className="label-text">{t("Form.productPrice")}</p>
+                {priceValid === false && (
+                  <span className="label-text-alt text-error">
+                    {t("Form.priceError")}
+                  </span>
+                )}
+              </div>
+              <input
+                type="text"
+                placeholder={t("Form.price")}
+                name="price"
+                className="input input-bordered w-full max-w-xs"
+                value={price}
+                onChange={(e) => onPriceChange(e.target.value)}
+              />
+            </label>
+            <button
+              className="btn btn-primary w-full mt-6"
+              type="submit"
+              disabled={!priceValid || !amountValid || !nameValid}
+            >
+              {t("Form.submitButton")}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

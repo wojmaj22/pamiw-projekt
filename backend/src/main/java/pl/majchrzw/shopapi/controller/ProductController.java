@@ -15,7 +15,8 @@ import java.util.Optional;
 
 @RestController()
 @RequestMapping("/api/products")
-@RequiredArgsConstructor    
+@RequiredArgsConstructor
+@CrossOrigin
 public class ProductController {
 	
 	private final ProductService productService;
@@ -37,20 +38,14 @@ public class ProductController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> postProduct(@RequestBody @Valid Product product){
-		productService.createProduct(product);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<Product> postProduct(@RequestBody @Valid Product product){
+		Product p = productService.createProduct(product);
+		return new ResponseEntity<>(p, HttpStatus.CREATED);
 	}
 	
 	@PutMapping
 	public ResponseEntity<String> putProduct(@RequestBody @Valid Product product){
 		productService.createProduct(product);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
-	@PatchMapping
-	public ResponseEntity<String> patchProduct(@RequestBody @Valid Product product){
-		productService.patchProduct();
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	

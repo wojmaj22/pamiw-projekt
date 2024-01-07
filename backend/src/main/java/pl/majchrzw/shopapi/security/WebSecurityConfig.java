@@ -8,11 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -24,12 +19,15 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests((authorize) -> authorize
-						.anyRequest().permitAll()
+						.requestMatchers(HttpMethod.GET,"/api/products**").permitAll()
+						.requestMatchers(HttpMethod.GET,"/api/products/*").permitAll()
+						.anyRequest().authenticated()
 				)
 				.oauth2ResourceServer((oauth2) -> oauth2
 						.jwt(Customizer.withDefaults())
 				)
-				.csrf(AbstractHttpConfigurer::disable);
+				.csrf(AbstractHttpConfigurer::disable)
+				.cors(Customizer.withDefaults());
 		return http.build();
 	}
 	

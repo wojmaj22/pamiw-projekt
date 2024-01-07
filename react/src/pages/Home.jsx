@@ -4,22 +4,23 @@ import { useEffect } from "react";
 import Pagination from "../shared/Pagination";
 import Card from "../shared/Card";
 import { useKeycloak } from "@react-keycloak/web";
+import { serverURL } from "../helpers/ApiProvider";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(8);
+  const [productsPerPage] = useState(8);
   const { keycloak, initialized } = useKeycloak();
 
   useEffect(() => {
-    const delay = 10;
+    const delay = 100;
     const handleDelayEnd = () => {
-      fetchPosts();
-      setLoading(false); // Zmiana stanu po zakończeniu opóźnienia
+      fetchProducts();
+      setLoading(false);
     };
-    const fetchPosts = () => {
-      fetch("http://20.101.96.88:80/api/products?size=100&page=0", {
+    const fetchProducts = () => {
+      fetch(`${serverURL}/products?size=100&page=0`, {
         cache: "no-store",
       })
         .then((res) => {
@@ -29,7 +30,6 @@ const Home = () => {
         })
         .then((data) => {
           setProducts(data.content);
-          return data;
         });
     };
     setLoading(true);
@@ -39,8 +39,24 @@ const Home = () => {
     return () => clearTimeout(timeoutId);
   }, []);
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const handleDelete = (id) => {
+    try {
+      fetch(`${serverURL}/products/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    // TODO - tutaj ręcznie zmienić listę products po prostu i powinno się przerenderować
+    const newProducts = products.filter((product) => product.id !== id);
+    setProducts(newProducts);
+  };
+
+  const indexOfLastPost = currentPage * productsPerPage;
+  const indexOfFirstPost = indexOfLastPost - productsPerPage;
   const currentProducts = products.slice(indexOfFirstPost, indexOfLastPost);
 
   const paginate = (pageNumber) => {
@@ -49,12 +65,13 @@ const Home = () => {
 
   return (
     <div>
-      {keycloak.authenticated && (
-        <p>Zalogowany użytkownik: {keycloak.tokenParsed.preferred_username}</p>
-      )}
-      <Card products={currentProducts} loading={loading}></Card>
+      <Card
+        products={currentProducts}
+        loading={loading}
+        onDelete={handleDelete}
+      ></Card>
       <Pagination
-        postsPerPage={postsPerPage}
+        postsPerPage={productsPerPage}
         totalPosts={products.length}
         paginate={paginate}
       />

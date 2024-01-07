@@ -1,13 +1,3 @@
-const ApiProvider = () => {
-  /*
-  const getUrl = () => {
-    return "http://localhost:8080/api";
-  };
-  */
-};
+const serverURL = "http://20.101.96.88:8080/api";
 
-export { ApiProvider };
-
-export function getUrl() {
-  return "http://localhost:8080/api";
-}
+export { serverURL };

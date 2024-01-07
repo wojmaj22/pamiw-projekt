@@ -210,7 +210,6 @@ public class OrderService {
 	}
 	
 	public Order saveOrderByUsername(String username, AddToCartDTO dto){
-		// TODO - sprawdzić czy order istnieje, jak nie to saveNewOrder(stworzyć PostOrderRequestBody), jak istnieje to addProductToOrder
 		Order order = getOrderByUsername(username);
 		if ( order  == null){
 			PostOrderRequestBody body = new PostOrderRequestBody();
